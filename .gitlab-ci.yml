@@ -65,3 +65,4 @@ verify_grading :
     paths :
     - /*
     script:
+    - ""
