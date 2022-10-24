@@ -1,0 +1,3 @@
+fmm@>cat .gitignore
+**__pycache__**
+**__files
