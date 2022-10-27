@@ -1,5 +1,5 @@
 import math
-with open("OUTCAR.txt", "r") as readfile:
+with open("__files/OUTCAR.txt", "r") as readfile:
     iteration = 0
     CPU_list = []
     for line in readfile:

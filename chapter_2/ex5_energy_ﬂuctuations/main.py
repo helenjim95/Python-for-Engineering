@@ -3,7 +3,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 with open("average.csv", "w") as output:
-    with open("zif-nvt.csv", "r") as file:
+    with open("__files/zif-nvt.csv", "r") as file:
         ps_list = []
         values = []
         avg_values = []

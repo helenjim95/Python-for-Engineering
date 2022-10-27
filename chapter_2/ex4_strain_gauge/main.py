@@ -1,7 +1,7 @@
 import math
 
 with open("strain_gauge_processed.csv", "w") as output:
-    with open("strain_gauge_rosette.csv", "r") as file:
+    with open("__files/strain_gauge_rosette.csv", "r") as file:
         r2_1_list = []
         r2_2_list = []
         r2_3_list = []
