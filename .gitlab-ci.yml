@@ -4,6 +4,6 @@ verify_grading :
     GRADED_USERS : ge32goy
   artifacts :
     paths :
-      - ./*
+      - /*
   script :
       - ""
