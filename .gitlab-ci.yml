@@ -1,9 +1,9 @@
-verify_grading:
-  variables:
-    TEST : "chapter_2" # the folder to test
-    GRADED_USERS : ge32goy # the userids to grade. The reponame-user is always graded!
-  artifacts:
-    paths:
+verify_grading :
+  variables :
+    TEST : "chapter_2/ex1_hollow_shapes"
+    GRADED_USERS : ge32goy
+  artifacts :
+    paths :
       - ./*
-  script:
+  script :
       - ""
