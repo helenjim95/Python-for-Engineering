@@ -52,5 +52,5 @@ with open("average.csv", "w") as output:
         # plot the data
         plt.plot(range(len(values)), values)
         plt.plot(range(len(avg_values)), avg_values)
-        plt.show()
+        # plt.show()
         plt.savefig("plot.pdf")
