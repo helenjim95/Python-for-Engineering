@@ -16,22 +16,38 @@ with open("average.csv", "w") as output:
             values.append(float(value))
 
         # calculate average value
-        # datapoint 1 (average 1-24) datapoint 2 (average 2-25), datapoint (3-26)
         total_list = []
         WINDOW_SIZE = 25
-        # for 24 iterations, add from values[0]...values[24] and average
+        # for first 24 iterations, average what you got
         for i in range(len(values) - WINDOW_SIZE + 1):
             total = 0
-            for index in range(WINDOW_SIZE):
-                total = values[i + index] + total
-            avg_value = total / WINDOW_SIZE
+            count = 0
+            if i < WINDOW_SIZE - 1:
+                for index in range(i + 1):
+                    # print(f"index: {index}")
+                    # print(f"values[{index}] {values[index]} + {total}")
+                    total += values[index]
+                    count += 1
+                avg_value = total / count
+                # print(f"total: {total}")
+                # print(f"average: {avg_value}")
+            else:
+                # starting from 25th iteration, average 25 datapoints
+                # print(f"i: {i}")
+                for index in range(WINDOW_SIZE):
+                    # print(f"index: {index}")
+                    # print(f"values[{i + index}] {values[i + index]} + {total}")
+                    total = values[i + index] + total
+                # print(f"total: {total}")
+                avg_value = total / WINDOW_SIZE
+            # print(f"average: {avg_value}")
             avg_values.append(avg_value)
 
+        # format to output
         for i in range(len(avg_values)):
-            data_list = [str(ps_list[i]), str("{:.2f}".format(values[i])), str("{:.2f}".format(avg_values[i]))]
-            print(data_list)
-            output.write(" ".join(data_list))
-            output.write("\n")
+            data_list = str("{:.2f}".format(avg_values[i]))
+            # print(data_list)
+            output.write(data_list + "\n")
 
         # plot the data
         plt.plot(range(len(values)), values)
