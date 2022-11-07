@@ -18,7 +18,6 @@ def convert_to_dtype(*args, dtype, debug=False):
         print(result)
 
 
-
 if __name__ == "__main__":
     convert_to_dtype("1", 4, 5.0, dtype=int)
     # [1, 4, 5]
