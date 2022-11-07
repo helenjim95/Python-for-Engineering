@@ -15,22 +15,22 @@ def convert_to_dtype(*args, dtype, debug=False):
             print(traceback.format_exc())
             break
     if len(result) == len([*args]):
-        print(result)
+        return result
 
 
 if __name__ == "__main__":
-    convert_to_dtype("1", 4, 5.0, dtype=int)
+    print(convert_to_dtype("1", 4, 5.0, dtype=int))
     # [1, 4, 5]
 
-    convert_to_dtype((1,0), "a", 15.1516, dtype=str)
+    print(convert_to_dtype((1,0), "a", 15.1516, dtype=str))
     # [’(1, 0)’, ’a’, ’15.1516’]
 
 
-    convert_to_dtype(5, "a", dtype=int, debug=False)
+    print(convert_to_dtype(5, "a", dtype=int, debug=False))
     # Traceback
     # ValueError: invalid literal for int() with base 10: ’a
 
-    convert_to_dtype(5, "a", dtype=int, debug=True)
+    print(convert_to_dtype(5, "a", dtype=int, debug=True))
     # ErrorMessage: Can’t convert ’a’ at index 1 # this is from the debug-flag
     # Traceback
     # ValueError: invalid literal for int() with base 10: ’a'
