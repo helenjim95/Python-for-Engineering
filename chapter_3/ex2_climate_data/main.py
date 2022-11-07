@@ -2,6 +2,7 @@ import os
 import json
 
 data_by_country = {}
+output_by_country = {}
 def read_output_file():
     global data_by_country
     # read in all the files in a dictionary structure
@@ -22,8 +23,8 @@ def read_output_file():
         json.dump(data_by_country, output)
 
 def aggregate():
+    global output_by_country
     with open('aggregated_data.json', 'w+') as output:
-        output_by_country = {}
         for key, values in data_by_country.items():
             t_avg = sum(values) / len(values)
             t_max = max(values)
@@ -35,3 +36,7 @@ def aggregate():
 if __name__ == "__main__":
     read_output_file()
     aggregate()
+    # print(str(data_by_country["DNK"]))
+    # KEY = ["DNK", "BRA", "CAN", "CIV", "PAK"]
+    # for k in KEY:
+    #     print(str(output_by_country[k]))
