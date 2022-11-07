@@ -10,11 +10,9 @@ def convert_to_dtype(*args, dtype, debug=False):
             exc_info = sys.exc_info()
             if debug:
                 print(f"ErrorMessage: Can't convert '{arg}' at index {index} # this is from the debug-flag")
-                traceback.print_exc()
-                # traceback.print_exception(*exc_info)
-                # print(e)
             else:
-                raise e
+                pass
+            print(traceback.format_exc())
             break
     if len(result) == len([*args]):
         print(result)
