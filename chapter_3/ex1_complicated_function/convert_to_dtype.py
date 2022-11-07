@@ -22,14 +22,14 @@ def convert_to_dtype(*args, dtype, debug=False):
 
 
 if __name__ == "__main__":
-    # convert_to_dtype("1", 4, 5.0, dtype=int)
+    convert_to_dtype("1", 4, 5.0, dtype=int)
     # [1, 4, 5]
 
-    # convert_to_dtype((1,0), "a", 15.1516, dtype=str)
+    convert_to_dtype((1,0), "a", 15.1516, dtype=str)
     # [’(1, 0)’, ’a’, ’15.1516’]
 
 
-    # convert_to_dtype(5, "a", dtype=int, debug=False)
+    convert_to_dtype(5, "a", dtype=int, debug=False)
     # Traceback
     # ValueError: invalid literal for int() with base 10: ’a
 
