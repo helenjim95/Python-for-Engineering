@@ -18,7 +18,7 @@ def read_output_file():
                     values.append(float(value))
                 data_by_country_unsorted[country_code] = values
         # Order the dictionary by the keys
-        data_by_country = dict(sorted(data_by_country_unsorted.items()))
+        data_by_country = data_by_country_unsorted
         # Output the dictionary to a json-ﬁle raw_data.json with the json.dump-function (help: import json; help(json.dump).
         json.dump(data_by_country, output)
 
