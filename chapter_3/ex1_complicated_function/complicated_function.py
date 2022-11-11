@@ -9,12 +9,13 @@ def convert_to_dtype(*args, dtype, debug=False):
         except ValueError as e:
             if debug:
                 print(f"ErrorMessage: Can't convert '{arg}' at index {index} # this is from the debug-flag")
-                exc_info = sys.exc_info()
-                print(traceback.format_exc())
+                # exc_info = sys.exc_info()
+                # print(traceback.format_exc())
                 raise ValueError
             else:
-                exc_info = sys.exc_info()
-                print(traceback.format_exc())
+                # exc_info = sys.exc_info()
+                # print(traceback.format_exc())
+                pass
     if len(result) == len([*args]):
         return result
     else:
