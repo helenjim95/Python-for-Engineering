@@ -29,7 +29,7 @@ def aggregate():
             t_avg = sum(values) / len(values)
             t_max = max(values)
             t_min = min(values)
-            output_by_country[key] = {'t_avg': t_avg, 't_max' : t_max, 't_min' : t_min}
+            output_by_country[key] = {'t_avg': t_avg, 't_max': t_max, 't_min': t_min}
         json.dump(output_by_country, output)
 
 
