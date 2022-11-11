@@ -37,6 +37,7 @@ if __name__ == "__main__":
     read_output_file()
     aggregate()
     print(str(data_by_country["DNK"]))
+    print(len(data_by_country["DNK"]))
     KEY = ["DNK", "BRA", "CAN", "CIV", "PAK"]
     for k in KEY:
         print(str(output_by_country[k]))
