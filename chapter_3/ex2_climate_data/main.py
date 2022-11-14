@@ -20,6 +20,7 @@ def read_output_file():
         # Order the dictionary by the keys
         # Output the dictionary to a json-ﬁle raw_data.json with the json.dump-function (help: import json; help(json.dump).
         json.dump(data_by_country, output, sort_keys=True)
+        
 
 def aggregate():
     global output_by_country
