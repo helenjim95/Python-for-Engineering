@@ -1,9 +1,5 @@
-import math
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import os
 import pandas as pd
-import numpy as np
 
 def process_file(filepath):
     df = pd.read_csv(filepath, sep="  ", header=None)
