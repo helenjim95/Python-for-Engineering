@@ -16,7 +16,7 @@ def process_file(filepath):
     df["e_2"] = 0.5 * (df["R2_1-m/m"] + df["R2_3-m/m"]  - np.sqrt(
         2 * ((df["R2_1-m/m"] - df["R2_2-m/m"]) ** 2 + (df["R2_2-m/m"] - df["R2_3-m/m"]) ** 2)))
 
-    df.to_csv('strain_gauge_processed.csv', sep=';', float_format='%.9f', index=False)
+    df.to_csv('strain_out.csv', sep=';', float_format='%.9f', index=False)
     # print("wrote to csv")
 
 if __name__ == "__main__":

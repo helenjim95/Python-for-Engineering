@@ -6,6 +6,7 @@ import numpy as np
 import io
 import requests
 import matplotlib.pyplot as plt
+from urllib.error import HTTPError
 
 def download_bme280(id, dates: list) -> pd.DataFrame:
 #     dates: list of already formatted datestrings
@@ -17,9 +18,10 @@ def download_bme280(id, dates: list) -> pd.DataFrame:
             # print(url)
             s = requests.get(url).content
             df = pd.read_csv(io.StringIO(s.decode('utf-8')), sep=";")
-            dfs.append(df)
-        except urllib.error.HTTPError as e:
+        except HTTPError as e:
             print("url invalid")
+        else:
+            dfs.append(df)
     #     Only if there is no single frame for all the dates given, function should raise a FileNotFoundError.
     if len(dfs) == 0:
         raise FileNotFoundError
