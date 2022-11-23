@@ -6,7 +6,6 @@ from urllib.error import HTTPError
 import os
 import numpy as np
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-import matplotlib.dates as mdates
 
 def download_data():
     states = ["BY", "NW", "SN", "TH", "DE-total"]
