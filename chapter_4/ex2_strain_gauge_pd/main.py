@@ -13,7 +13,7 @@ def process_file(filepath):
 
     # print(df.describe())
     df["e_1"] = 0.5 * (df["R2_1-m/m"] + df["R2_3-m/m"] + np.sqrt(2 * ((df["R2_1-m/m"] - df["R2_2-m/m"]) ** 2 + (df["R2_2-m/m"] - df["R2_3-m/m"]) ** 2)))
-    df["e_2"] = 0.5 * (df["R2_1-m/m"] + df["R2_3-m/m"]  - np.sqrt(
+    df["e_2"] = 0.5 * (df["R2_1-m/m"] + df["R2_3-m/m"] - np.sqrt(
         2 * ((df["R2_1-m/m"] - df["R2_2-m/m"]) ** 2 + (df["R2_2-m/m"] - df["R2_3-m/m"]) ** 2)))
 
     df.to_csv('strain_out.csv', sep=';', float_format='%.9f', index=False)
