@@ -1,6 +1,6 @@
 verify_grading :
   variables :
-    TEST : "chapter_4"
+    TEST : "chapter_5"
     GRADED_USERS : ge32goy
   artifacts :
     paths :
