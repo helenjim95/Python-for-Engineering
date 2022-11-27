@@ -1,13 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 import numpy as np
 from matplotlib import cm, ticker
-from matplotlib.ticker import MultipleLocator
-
-
-def contour():
-    pass
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 def main():
     df = pd.read_csv("__files/fes.csv", header=0, sep="\t",  names=['x', 'y', 'free_energy'])
@@ -20,24 +16,16 @@ def main():
     ax1 = fig.add_subplot(121)
     ax1.contour(X, Y, Z)
     ax1.yaxis.set_major_locator(ticker.MaxNLocator(9))
-    ax1.set_xlabel("cv1")
-    ax1.set_ylabel("cv2")
-    ax2 = fig.add_subplot(122, projection='3d')
-    ax2.set_zlabel("free energy (kJ/mol)")
-    ax2.set_aspect('equal')
-    ax2.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-    ax2.set_xlim([-3, 2])
-    ax2.set_ylim([0.25, 2.0])
-    ax2.set_zlim([160, 0])
-    np.random.seed(19680801)
-
-    # TODO: How to place colorbar
-    cmaps = ['RdBu_r', 'viridis']
-    pcm = ax2.pcolormesh(np.random.random((20, 20)), cmap=cmaps[1])
-    # cax = plt.axes([0.85, 0.1, 0.075, 0.8])
-    fig.colorbar(pcm, ax=ax2)
+    ax1.set(xlim=(-3, 2), ylim=(0.35, 2.0), xlabel='cv1', ylabel='cv2')
+    ax2 = fig.add_subplot(122, projection="3d")
+    surface = ax2.plot_surface(X, Y, Z, linewidth=0, antialiased=False)
+    fig.colorbar(surface, shrink=0.5, aspect=15,  cmap='RdBu_r')
+    surface_2d = ax2.contour(X, Y, Z, linestyles="solid", offset=-1)
+    ax2.set(aspect='equal', xlim=(-3, 2), ylim=(0.35, 2.0), zlim=(0, 160), xlabel='cv1', ylabel='cv2', zlabel='free energy (kJ/mol)')
     plt.savefig("plot.pdf")
     plt.show()
+
+
 
 if __name__ == "__main__":
     main()
