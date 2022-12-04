@@ -1,74 +1,112 @@
+import gzip
 import os
 import struct
+import random
+from tempfile import TemporaryDirectory
+
+from sklearn import metrics
+import idx2numpy
+import numpy as np
+from matplotlib import pyplot as plt
+from mlxtend.data import loadlocal_mnist
+import platform
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
+
 import loader
 from numpy import array
 import pathlib
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsTransformer
+from sklearn import svm, neighbors
+from sklearn import datasets
+import joblib
 
-test_folder = "C:/repos/Python for Engineering Data Analysis/ge32goy/chapter_7/ex3_MNIST_KNN/__files"
-
+test_folder = "__files"
+n_neighbors_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 def load_mnist(folder=test_folder, train=True):
     file_list = os.listdir(folder)
-    mnist = loader.MNIST()
-    batch_number = 0
-    batch_size = file_list.size()
-    for path_img in file_list:
-        filepath = f"{test_folder}/{path_img}"
-        if file_list is not None:
-            if type(file_list) is not list or len(file_list) is not 2:
-                raise ValueError('batch should be a 1-D list'
-                                 '(start_point, batch_size)')
+    if train:
+        if not platform.system() == 'Windows':
+            X, y = loadlocal_mnist(
+                images_path=f"{folder}/train-images-idx3-ubyte",
+                labels_path=f"{folder}/train-labels-idx1-ubyte")
 
-        with open(folder, 'rb') as file:
-            magic, size = struct.unpack(">II", file.read(8))
-            if magic != 2049:
-                raise ValueError('Magic number mismatch, expected 2049,'
-                                 'got {}'.format(magic))
+        else:
+            X, y = loadlocal_mnist(
+                images_path=f"{folder}/train-images.idx3-ubyte",
+                labels_path=f"{folder}/train-labels.idx1-ubyte")
+        return X, y
+    if not train:
+        if not platform.system() == 'Windows':
+            X, y = loadlocal_mnist(
+                images_path=f"{folder}/t10k-images-idx3-ubyte",
+                labels_path=f"{folder}/t10k-labels-idx1-ubyte")
 
-            labels = array("B", file.read())
+        else:
+            X, y = loadlocal_mnist(
+                images_path=f"{folder}/t10k-images.idx3-ubyte",
+                labels_path=f"{folder}/t10k-labels.idx1-ubyte")
+        return X, y
 
-        with open(path_img, 'rb') as file:
-            magic, size, rows, cols = struct.unpack(">IIII", file.read(16))
-            if magic != 2051:
-                raise ValueError('Magic number mismatch, expected 2051,'
-                                 'got {}'.format(magic))
+def image_show(number, data, label):
+        fig, axes = plt.subplots(2, 2, figsize=(8, 4))
+        for row in range(0, 2):
+            for col in range(0, 2):
+                x = data[row + col]  # get the vectorized image
+                x = x.reshape((28, 28))  # reshape it into 28x28 format
+                print('The image label of index %d is %d.' % (i, label[i]))
+                axes[row][col] = x
+        print("saving numbers.pdf")
+        plt.savefig("numbers.pdf")
+        plt.show()
+        # plt.imshow(x, cmap='gray')
 
-            image_data = array("B", file.read())
-
-        if file_list is not None:
-            image_data = image_data[batch_number * rows * cols: \
-                                    (batch_number + batch_size) * rows * cols]
-            labels = labels[batch_number: batch_size + batch_size]
-            size = batch_size
-
-        images = []
-        for i in range(size):
-            images.append([0] * rows * cols)
-
-        for i in range(size):
-            images[i][:] = image_data[i * rows * cols:(i + 1) * rows * cols]
-
-            # for some reason EMNIST is mirrored and rotated
-            # if self.emnistRotate:
-            #     x = image_data[i * rows * cols:(i + 1) * rows * cols]
-            #
-            #     subs = []
-            #     for r in range(rows):
-            #         subs.append(x[(rows - r) * cols - cols:(rows - r) * cols])
-            #
-            #     l = list(zip(*reversed(subs)))
-            #     fixed = [item for sublist in l for item in sublist]
-            #
-            #     images[i][:] = fixed
-
-        return images, labels
-
+def plot_knn(model):
+    fig, axes = plt.subplots(1, 1, figsize=(8, 4))
+    axes.errorbar(
+        x=n_neighbors_list,
+        y=model.cv_results_["mean_test_score"],
+        yerr=model.cv_results_["std_test_score"],
+    )
+    axes.set(xlabel="n_neighbors", title="Classification accuracy")
+    # axes[1].errorbar(
+    #     x=n_neighbors_list,
+    #     y=grid_model.cv_results_["mean_fit_time"],
+    #     yerr=grid_model.cv_results_["std_fit_time"],
+    #     color="r",
+    # )
+    # axes[1].set(xlabel="n_neighbors", title="Fit time (with caching)")
+    # fig.tight_layout()
+    print("saving knn.pdf")
+    plt.savefig("knn.pdf")
+    plt.show()
 
 def main():
-    images, labels = load_mnist(folder="__files", train=True)
-    print(images)
-    print(labels)
-    print("it is done")
+    X_train, y_train = load_mnist(folder=test_folder, train=True)
+    X_test, y_test = load_mnist(folder=test_folder, train=False)
+    # print('The shape of the Training data : ', X_train.shape)
+    accuracy = 0
+    while (accuracy < 0.8):
+        graph_model = KNeighborsTransformer(n_neighbors=max(n_neighbors_list), mode="distance")
+        classifier_model = KNeighborsClassifier(metric="precomputed")
+        with TemporaryDirectory(prefix="sklearn_graph_cache_") as tmpdir:
+            full_model = Pipeline(
+                steps=[("graph", graph_model), ("classifier", classifier_model)], memory=tmpdir
+            )
+
+            param_grid = {"classifier__n_neighbors": n_neighbors_list}
+            grid_model = GridSearchCV(full_model, param_grid)
+            grid_model.fit(X_train, y_train)
+            y_pred = grid_model.predict(X_test)
+            accuracy = metrics.accuracy_score(y_test, y_pred)
+            print(accuracy)
+    print("accuracy > 80%, dumping model.sk")
+    s = joblib.dump(grid_model, "model.sk")
+    image_show(4, X_train, y_train)
+    plot_knn(grid_model)
+
 
 
 if __name__ == "__main__":
