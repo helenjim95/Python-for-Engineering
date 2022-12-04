@@ -8,6 +8,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsTransformer
 import joblib
+from sklearn.metrics import accuracy_score
 
 test_folder = "__files"
 n_neighbors_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -45,12 +46,12 @@ def image_show(number, data, label):
         for col in range(0, 2):
             x = data[row + col]  # get the vectorized image
             x = x.reshape((28, 28))  # reshape it into 28x28 format
-            print('The image label of index %d is %d.' % (i, label[i]))
             axes[row][col] = x
     print("saving numbers.pdf")
     plt.savefig("numbers.pdf")
     plt.show()
     # plt.imshow(x, cmap='gray')
+
 
 def plot_knn(model):
     fig, axes = plt.subplots(1, 1, figsize=(8, 4))
@@ -81,20 +82,23 @@ def main():
     print("test data/labels loaded")
     # print('The shape of the Training data : ', X_train.shape)
     accuracy = 0
-    while (accuracy < 0.8):
-        graph_model = KNeighborsTransformer(n_neighbors=max(n_neighbors_list), mode="distance")
-        classifier_model = KNeighborsClassifier(metric="precomputed")
-        with TemporaryDirectory(prefix="sklearn_graph_cache_") as tmpdir:
-            full_model = Pipeline(
-                steps=[("graph", graph_model), ("classifier", classifier_model)], memory=tmpdir
-            )
-
-            param_grid = {"classifier__n_neighbors": n_neighbors_list}
-            grid_model = GridSearchCV(full_model, param_grid)
-            grid_model.fit(X_train, y_train)
-            y_pred = grid_model.predict(X_test)
-            accuracy = metrics.accuracy_score(y_test, y_pred)
-            print(accuracy)
+    # while accuracy < 0.8:
+    graph_model = KNeighborsTransformer(n_neighbors=max(n_neighbors_list), mode="distance")
+    classifier_model = KNeighborsClassifier(metric="precomputed")
+    with TemporaryDirectory(prefix="sklearn_graph_cache_") as tmpdir:
+        full_model = Pipeline(
+            steps=[("graph", graph_model), ("classifier", classifier_model)], memory=tmpdir
+        )
+        param_grid = {"classifier__n_neighbors": n_neighbors_list}
+        grid_model = GridSearchCV(full_model, param_grid)
+        print("grid_model done")
+        grid_fit = grid_model.fit(X_train, y_train)
+        print("grid_fit done")
+        y_pred = grid_model.predict(X_test)
+        print(y_pred)
+        # accuracy = grid_model.score(X_test, y_train)
+        accuracy = metrics.accuracy_score(y_test, y_pred)
+        print(accuracy)
     print("accuracy > 80%, dumping model.sk")
     s = joblib.dump(grid_model, "model.sk")
     image_show(4, X_train, y_train)
