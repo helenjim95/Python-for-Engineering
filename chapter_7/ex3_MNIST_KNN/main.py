@@ -1,29 +1,17 @@
-import gzip
 import os
-import struct
-import random
 from tempfile import TemporaryDirectory
-
 from sklearn import metrics
-import idx2numpy
-import numpy as np
 from matplotlib import pyplot as plt
 from mlxtend.data import loadlocal_mnist
 import platform
-
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
-
-import loader
-from numpy import array
-import pathlib
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsTransformer
-from sklearn import svm, neighbors
-from sklearn import datasets
 import joblib
 
 test_folder = "__files"
 n_neighbors_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 
 def load_mnist(folder=test_folder, train=True):
     file_list = os.listdir(folder)
@@ -50,18 +38,19 @@ def load_mnist(folder=test_folder, train=True):
                 labels_path=f"{folder}/t10k-labels.idx1-ubyte")
         return X, y
 
+
 def image_show(number, data, label):
-        fig, axes = plt.subplots(2, 2, figsize=(8, 4))
-        for row in range(0, 2):
-            for col in range(0, 2):
-                x = data[row + col]  # get the vectorized image
-                x = x.reshape((28, 28))  # reshape it into 28x28 format
-                print('The image label of index %d is %d.' % (i, label[i]))
-                axes[row][col] = x
-        print("saving numbers.pdf")
-        plt.savefig("numbers.pdf")
-        plt.show()
-        # plt.imshow(x, cmap='gray')
+    fig, axes = plt.subplots(2, 2, figsize=(8, 4))
+    for row in range(0, 2):
+        for col in range(0, 2):
+            x = data[row + col]  # get the vectorized image
+            x = x.reshape((28, 28))  # reshape it into 28x28 format
+            print('The image label of index %d is %d.' % (i, label[i]))
+            axes[row][col] = x
+    print("saving numbers.pdf")
+    plt.savefig("numbers.pdf")
+    plt.show()
+    # plt.imshow(x, cmap='gray')
 
 def plot_knn(model):
     fig, axes = plt.subplots(1, 1, figsize=(8, 4))
@@ -83,9 +72,13 @@ def plot_knn(model):
     plt.savefig("knn.pdf")
     plt.show()
 
+
 def main():
+    print("start the main method")
     X_train, y_train = load_mnist(folder=test_folder, train=True)
+    print("training data/labels loaded")
     X_test, y_test = load_mnist(folder=test_folder, train=False)
+    print("test data/labels loaded")
     # print('The shape of the Training data : ', X_train.shape)
     accuracy = 0
     while (accuracy < 0.8):
@@ -106,7 +99,6 @@ def main():
     s = joblib.dump(grid_model, "model.sk")
     image_show(4, X_train, y_train)
     plot_knn(grid_model)
-
 
 
 if __name__ == "__main__":
