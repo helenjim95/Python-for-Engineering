@@ -1,0 +1,5 @@
+I first created a list of alphas and gammas to get a model with the best R square and extract the best estimate (alpha and gamma)
+from the model and tune to the current model.
+The model could have increased the degree, but the higher the degree, the more the model is overfitting.
+The KernelRidge regression is however computationally costly and not scalable to datasets with more than a couple of 10000 samples.
+The model is also sensitive to outliers, noise, the choice of the kernel parameters and the regularization parameter alpha.
