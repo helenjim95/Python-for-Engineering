@@ -9,33 +9,38 @@ from sklearn.kernel_ridge import KernelRidge
 
 
 # TODO: how to update y_pred for each iteration of the loop?
-y_pred = 0
+y_pred = 1
+model = 0
+test_r2 = 0
+test_mae = 0
+test_mse = 0
+train_mae = 0
+train_mse = 0
+train_r2 = 0
+# def freaction(a):
+#     train_sizes = np.linspace(0.1, 1.0, 10)
+#     a = np.deg2rad(a)
+#     return
+
 def main():
     dataframe = pd.read_csv("__files/nitride_compounds.csv", header=0, index_col=0)
     # print(dataframe.head())
     data = dataframe.values
-    y = data[:, 28] #HSE band gap
     X = data[:, 1:27]
+    y = data[:, 28] #HSE band gap
     n_sample = X.shape[0]
     X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True, train_size=0.8)
-    global y_pred
-    test_r2 = 0.7
-    test_mae = 0
-    test_mse = 0
-    train_mae = 0
-    train_mse = 0
-    train_r2 = 0
+
+    global y_pred, model, test_r2, test_mae, test_mse, train_mae, train_mse, train_r2
+
     alphas = [1e0, 0.1, 1e-2, 1e-3]
     gammas = np.logspace(-2, 2, 5)
-    model = 0
-    hypermodel = 0
     while test_r2 < 0.7:
         for (alpha, gamma) in zip(alphas, gammas):
-            kr = KernelRidge(kernel="rbf", alpha=alpha, gamma=gamma, degree=5, coef0=1, kernel_params=None)
+            kr = KernelRidge(kernel="rbf", alpha=alpha, gamma=gamma, degree=3, coef0=1, kernel_params=None)
             hypermodel = GridSearchCV(kr, param_grid=dict(alpha=alphas, gamma=gammas), cv=5, scoring='neg_mean_squared_error')
-            hypermodel.fit(X_train.reshape(-1, 1), y_train)
-            y_pred = hypermodel.predict(X_test.reshape(-1, 1))
-            print("y_pred", y_pred)
+            hypermodel.fit(X_train, y_train)
+            y_pred = hypermodel.predict(X_test)
             best_params = hypermodel.best_params_
             score = r2_score(y_test, y_pred)
             train_r2 = r2_score(y_train[0:y_pred.shape[0]], y_pred)
@@ -49,38 +54,70 @@ def main():
             if score > test_r2:
                 test_r2 = score
                 model = kr
+
+    # df_training = pd.DataFrame(X_train)
+    # df_training.append(pd.DataFrame(y_train))
+    # # df_training = df_training.sort_values('X_train', axis=0, ascending=True)
+    # df_training.to_csv("train.csv", index=False)
+    # data_training = df_training.values
+    #
+    # df_test = pd.DataFrame(X_test)
+    # df_test.append(pd.DataFrame(y_test))
+    # df_test.append(pd.DataFrame(y_pred))
+    # # df_test = df_test.sort_values('X_test', axis=0, ascending=True)
+    # df_test.to_csv("test.csv", index=False)
+    # data_test = df_test.values
+
     s = joblib.dump(hypermodel, "model.joblib")
-    # training_size = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-    # for (size) in training_size:
 
-    # TODO: something is wrong with X, need to create a dataframe for R square for plotting
-    # train_sizes_abs, train_scores_kr, test_scores_kr = learning_curve(
-    #     model,
-    #     X_train.reshape(-1, 1),
-    #     y_train,
-    #     train_sizes=np.linspace(0.1, 1, 10),
-    #     scoring="neg_mean_squared_error",
-    #     cv=10,
-    # )
+    train_sizes_abs_mse, train_scores_mse, test_scores_mse = learning_curve(
+        model,
+        X_train,
+        y_train,
+        train_sizes=np.linspace(0.1, 1.0, 10),
+        scoring="neg_mean_squared_error",
+        cv=5,
+    )
 
-    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(10, 5))
-    # ax1.plot(train_sizes_abs, -train_scores_kr.mean(axis=1), "o-", color="r", label="Training MSE score")
+    train_sizes_abs_r2, train_scores_r2, test_scores_r2 = learning_curve(
+        model,
+        X_train,
+        y_train,
+        train_sizes=np.linspace(0.1, 1.0, 10),
+        scoring="r2",
+        cv=5,
+    )
+
+    df_mse = pd.DataFrame(columns=['train_sizes_abs_mse', '-test_scores_mse.mean'])
+    df_mse['train_sizes_abs_mse'] = train_sizes_abs_mse
+    df_mse['-test_scores_mse.mean'] = -test_scores_mse.mean(axis=1)
+    df_mse = df_mse.sort_values('train_sizes_abs_mse', axis=0, ascending=True)
+    data_mse = df_mse.values
+
+    df_r2 = pd.DataFrame(columns=['train_sizes_abs_r2', 'test_scores_r2.mean'])
+    df_r2['train_sizes_abs_r2'] = train_sizes_abs_r2
+    df_r2['test_scores_r2.mean'] = test_scores_r2.mean(axis=1)
+    df_r2 = df_r2.sort_values('train_sizes_abs_r2', axis=0, ascending=True)
+    data_mse = df_r2.values
+
+    # TODO: second plot put into dataframe and sort
+    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(20, 10))
+    ax1_2 = ax1.twinx()
+    ax1.plot(np.linspace(0.1, 1.0, 10), df_mse['-test_scores_mse.mean'], color="b", label="Test MSE score")
+    ax1_2.plot(np.linspace(0.1, 1.0, 10), df_r2['test_scores_r2.mean'], color="r", label="r2 score")
     ax1.set(title="Learning curves", xlabel="fraction of training data used", ylabel='MSE')
-    ax2.plot(y_test, y_pred, label='gap')
-    ax2.scatter(y_train, y_pred, label='training data', color="b")
-    ax2.scatter(y_test, y_pred, label='training data', color="r")
-    ax2.set(title=f"Model R square:{test_r2}, MAE:{test_mae}", xlabel="Calculated gap", ylabel='Model gap')
-    ax2.legend("upper left")
+    ax1_2.set(ylabel='R Square')
+    p1 = max(max(y_pred), max(y_test))
+    p2 = min(min(y_pred), min(y_test))
+    ax2.plot([p1, p2], [p1, p2], 'b-')
+    training_dots = ax2.scatter(y_train[0:y_pred.shape[0]], y_pred, color="b", label='training data')
+    test_dots = ax2.scatter(y_test, y_pred,  color="r", label='test data')
+    ax2.legend()
+    ax2.set(title=f"Model R square:{test_r2:.3f}, MAE:{test_mae:.3f}", xlabel="Calculated gap", ylabel='Model gap')
+
     plt.savefig("plot.pdf")
     plt.show()
 
-# finding:
-# y = band gap (PBE Eg (eV),HSE Eg (eV)
-# After comparison among different machine learning techniques,
-# when elemental properties are taken as features,
-# support vector regression (SVR) with radial kernel performs best for
-# predicting both the band gap and band offset with a prediction root mean square error (RMSE)
-# of 0.298 eV and 0.183 eV, respectively.
 
 if __name__ == "__main__":
     main()
