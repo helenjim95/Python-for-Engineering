@@ -16,7 +16,6 @@ def main():
     n_sample = X.shape[0]
     X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True, train_size=0.8)
 
-    # TODO: change to 10000
     alpha_range = [float(x) for x in range(1, 10001)]
     columns = ['Alpha', 'Income', 'Limit', 'Rating', 'Cards', 'R2_score', 'MAE']
     df = pd.DataFrame(columns=columns)
@@ -37,7 +36,7 @@ def main():
         df.loc[index, ['R2_score']] = r2_score(y_test, y_pred)
         df.loc[index, ['MAE']] = mean_absolute_error(y_test, y_pred)
         if index < 10:
-            s = joblib.dump(model, f"model{index}.joblib")
+            s = joblib.dump(model, f"model{index + 1}.joblib")
 
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     for (columnName, columnData) in df.iteritems():
