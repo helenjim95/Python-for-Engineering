@@ -17,10 +17,7 @@ test_mse = 0
 train_mae = 0
 train_mse = 0
 train_r2 = 0
-# def freaction(a):
-#     train_sizes = np.linspace(0.1, 1.0, 10)
-#     a = np.deg2rad(a)
-#     return
+
 
 def main():
     dataframe = pd.read_csv("__files/nitride_compounds.csv", header=0, index_col=0)
@@ -54,19 +51,6 @@ def main():
             if score > test_r2:
                 test_r2 = score
                 model = kr
-
-    # df_training = pd.DataFrame(X_train)
-    # df_training.append(pd.DataFrame(y_train))
-    # # df_training = df_training.sort_values('X_train', axis=0, ascending=True)
-    # df_training.to_csv("train.csv", index=False)
-    # data_training = df_training.values
-    #
-    # df_test = pd.DataFrame(X_test)
-    # df_test.append(pd.DataFrame(y_test))
-    # df_test.append(pd.DataFrame(y_pred))
-    # # df_test = df_test.sort_values('X_test', axis=0, ascending=True)
-    # df_test.to_csv("test.csv", index=False)
-    # data_test = df_test.values
 
     s = joblib.dump(hypermodel, "model.joblib")
 

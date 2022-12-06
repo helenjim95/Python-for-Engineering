@@ -2,18 +2,15 @@ import json
 import os
 
 import joblib
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.kernel_ridge import KernelRidge
-from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
 
 def main():
     dataframe = pd.read_csv("__files/wave.csv", header=0)
-    # print(dataframe.head())
     data = dataframe.values
     X = data[:, 0]
     y = data[:, -1]
