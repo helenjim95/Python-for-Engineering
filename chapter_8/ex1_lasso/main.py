@@ -36,7 +36,7 @@ def main():
         df.loc[index, ['R2_score']] = r2_score(y_test, y_pred)
         df.loc[index, ['MAE']] = mean_absolute_error(y_test, y_pred)
         if index < 10:
-            s = joblib.dump(model, f"model{index + 1}.joblib")
+            s = joblib.dump(model, f"model_{index + 1}.joblib")
 
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     for (columnName, columnData) in df.iteritems():

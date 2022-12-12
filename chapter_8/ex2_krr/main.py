@@ -56,7 +56,7 @@ def main():
     df_training = df_training.sort_values('X_train', axis=0, ascending=True)
     data_training = df_training.values
 
-    df_test = pd.DataFrame(columns=['X_test', 'y_test', 'y_pred'])
+    df_test = pd.DataFrame(columns=['X_test', 'y_test'])
     df_test['X_test'] = X_test
     df_test['y_test'] = y_test
     df_test.to_csv("test.csv", index=False)
