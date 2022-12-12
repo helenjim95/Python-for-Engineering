@@ -52,14 +52,14 @@ def main():
     df_training = pd.DataFrame(columns=['X_train', 'y_train'])
     df_training['X_train'] = X_train
     df_training['y_train'] = y_train
-    df_training.to_csv("train.csv", index=False)
+    df_training.to_csv("train.csv", index=False, header=False)
     df_training = df_training.sort_values('X_train', axis=0, ascending=True)
     data_training = df_training.values
 
     df_test = pd.DataFrame(columns=['X_test', 'y_test'])
     df_test['X_test'] = X_test
     df_test['y_test'] = y_test
-    df_test.to_csv("test.csv", index=False)
+    df_test.to_csv("test.csv", index=False, header=False)
     df_test['y_pred'] = y_pred
     df_test = df_test.sort_values('X_test', axis=0, ascending=True)
     data_test = df_test.values
