@@ -87,7 +87,7 @@ def main():
     while accuracy < 0.8:
         knn.fit(X_train, y_train)
         accuracy = knn.score(X_test, y_test)
-        print(accuracy)
+        # print(accuracy)
     # print("accuracy > 80%, dumping model.sk")
     s = joblib.dump(knn, "model.sk")
 
@@ -113,8 +113,8 @@ def main():
     plt.legend()
     plt.xlabel('Number of Nearest Neighbors')
     plt.ylabel('Test Accuracy')
-    # print("saving knn.pdf")
-    plt.savefig("knn.pdf")
+    # print("saving plot.pdf")
+    plt.savefig("plot.pdf")
     plt.show()
     # image_show(4, X_train, y_train)
     # plot_knn(grid_model)
