@@ -16,17 +16,13 @@ def collect_files(folder, outfolder, ext="pdf", use_magic=False):
                 print("File does not end with extension: " + file_)
                 if use_magic:
                     fileinfo = filetype.guess(file_)
-
                     mime_type = fileinfo.mime
-                    # mime_type = magic.from_file(file_, mime=True)
-                    print(mime_type)
                     if mime_type is None:
                         print('Cannot guess file type!')
                     else:
                         if mime_type == ext:
                             print('File extension: %s' % mime_type)
                             magic_ext = " ".join(glob.glob(folder + "/*." + ext))
-                            # detectedExt = fileinfo.extension
                             magic_ext = magic_ext.split()
                             for i in magic_ext:
                                 os.system("cp " + i + " " + outfolder)

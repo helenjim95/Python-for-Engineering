@@ -53,7 +53,7 @@ def main():
     plt.ylabel("True Positive Rate")
     plt.title("ROC Curve")
     plt.legend()
-    plt.savefig("plot.pdf")
+    plt.savefig("roc.pdf")
     plt.show()
 
 
