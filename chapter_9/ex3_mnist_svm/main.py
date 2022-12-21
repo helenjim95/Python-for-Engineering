@@ -110,7 +110,6 @@ def get_labels(train_data=True, test_data=False):
             label_data = f.read()
             test_labels = np.frombuffer(label_data, dtype=np.uint8)
             to_return.append(test_labels)
-
     return to_return
 
 def plot_image(X_test, y_test, y_pred):
