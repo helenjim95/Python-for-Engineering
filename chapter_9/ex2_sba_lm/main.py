@@ -29,7 +29,7 @@ def main():
     FP = cm[0][1]
     FN = cm[1][0]
     TN = cm[1][1]
-    with open('confusion_matrix.json', 'w') as output:
+    with open('confusion.json', 'w') as output:
         data = {"tn": TN, "fp": FP, "fn": FN, "tp": TP}
         json.dump(data, output, sort_keys=False, default=str)
 
