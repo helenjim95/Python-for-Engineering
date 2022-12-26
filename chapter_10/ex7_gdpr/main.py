@@ -76,8 +76,8 @@ def plot_location(data_list):
 def main():
     filepath = "__files/events-2022-00000-of-00001.json"
     data_list = read_data(filepath)
-    # plot_histogram(data_list)
-    # save_osbrowser(data_list)
+    plot_histogram(data_list)
+    save_osbrowser(data_list)
     plot_location(data_list)
 
 
